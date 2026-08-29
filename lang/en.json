@@ -1,0 +1,86 @@
+{
+  "SETTINGS_SYNC.Title": "Settings Sync",
+
+  "SETTINGS_SYNC.Menu.Name": "Settings Sync",
+  "SETTINGS_SYNC.Menu.Label": "Compare Worlds",
+  "SETTINGS_SYNC.Menu.Hint": "Compare this world's enabled modules and settings against another world, and pull across the differences.",
+
+  "SETTINGS_SYNC.Setting.AutoPublish.Name": "Publish this world automatically",
+  "SETTINGS_SYNC.Setting.AutoPublish.Hint": "Write a snapshot of this world when it loads, so other worlds can compare against it. Without this, a world only becomes a comparison target when you publish it by hand.",
+  "SETTINGS_SYNC.Setting.PublishInterval.Name": "Minimum minutes between snapshots",
+  "SETTINGS_SYNC.Setting.PublishInterval.Hint": "Automatic publishing is skipped if this world's snapshot is newer than this. Set to 0 to publish on every load.",
+
+  "SETTINGS_SYNC.CompareWith": "Compare with",
+  "SETTINGS_SYNC.NoTargets": "No snapshots found",
+  "SETTINGS_SYNC.NoTargetsHint": "No other world has published a snapshot yet. Launch another world with Settings Sync enabled, or import a snapshot file.",
+  "SETTINGS_SYNC.Loading": "Reading snapshots…",
+  "SETTINGS_SYNC.Foundry": "Foundry",
+  "SETTINGS_SYNC.Captured": "captured",
+  "SETTINGS_SYNC.Imported": "imported",
+  "SETTINGS_SYNC.ImportedTarget": "{world} (imported)",
+
+  "SETTINGS_SYNC.SearchPlaceholder": "Filter by name or key…",
+  "SETTINGS_SYNC.Filter.Identical": "Identical",
+  "SETTINGS_SYNC.Filter.Blocked": "Blocked",
+  "SETTINGS_SYNC.Filter.Noise": "Noise",
+
+  "SETTINGS_SYNC.SelectAllHere": "select all",
+  "SETTINGS_SYNC.SelectAllDifferences": "Select All Differences",
+  "SETTINGS_SYNC.Clear": "Clear",
+  "SETTINGS_SYNC.ApplySelected": "Apply Selected",
+  "SETTINGS_SYNC.Apply": "Apply",
+  "SETTINGS_SYNC.Selected": "Selected",
+  "SETTINGS_SYNC.Of": "of",
+  "SETTINGS_SYNC.Unset": "unset",
+  "SETTINGS_SYNC.FilteredOut": "Differences here are hidden by the current filters.",
+  "SETTINGS_SYNC.NoDifferences": "No differences.",
+  "SETTINGS_SYNC.On": "on",
+  "SETTINGS_SYNC.Off": "off",
+  "SETTINGS_SYNC.Absent": "not installed",
+
+  "SETTINGS_SYNC.Tooltip.Refresh": "Re-read the snapshots and rebuild the comparison",
+  "SETTINGS_SYNC.Tooltip.Publish": "Publish a snapshot of this world now",
+  "SETTINGS_SYNC.Tooltip.Import": "Import a snapshot file from another install",
+  "SETTINGS_SYNC.Tooltip.Export": "Download this world's snapshot as a file",
+  "SETTINGS_SYNC.Tooltip.Detail": "Show which keys differ",
+
+  "SETTINGS_SYNC.Category.Modules": "Modules",
+  "SETTINGS_SYNC.Category.Core": "Core",
+  "SETTINGS_SYNC.Category.System": "System — {system}",
+  "SETTINGS_SYNC.Category.User": "User — yours",
+  "SETTINGS_SYNC.Category.Client": "Client — per browser",
+
+  "SETTINGS_SYNC.Note.UserScope": "User-scope settings belong to a user id, and user ids are per-world. These are the snapshotting user's, and applying them writes them to you.",
+  "SETTINGS_SYNC.Note.ClientScope": "Client settings live in this browser's storage, keyed without a world prefix — every world served from this address already shares them. Two worlds on the same install will always agree here, and applying a row changes that setting for all of them.",
+
+  "SETTINGS_SYNC.Warning.SystemMismatch": "These worlds run different systems ({here} here, {there} there). System settings cannot be applied.",
+  "SETTINGS_SYNC.Warning.SystemVersion": "System versions differ: {here} here, {there} there. A setting's meaning may have changed between them.",
+  "SETTINGS_SYNC.Warning.CoreVersion": "Foundry versions differ: {here} here, {there} there.",
+
+  "SETTINGS_SYNC.Module.NotInstalled": "Not installed here — enable it in Add-on Modules first.",
+  "SETTINGS_SYNC.Module.VersionDiffers": "Different version there.",
+
+  "SETTINGS_SYNC.State.same": "identical",
+  "SETTINGS_SYNC.State.differs": "differs",
+  "SETTINGS_SYNC.State.only-here": "set here only",
+  "SETTINGS_SYNC.State.only-there": "set there only",
+
+  "SETTINGS_SYNC.Blocked.core_moduleConfiguration": "This is the Modules list above; change it there.",
+  "SETTINGS_SYNC.Blocked.core_compendiumConfiguration": "Holds compendium pack ids, including packs local to that world.",
+  "SETTINGS_SYNC.Blocked.core_time": "The world clock.",
+  "SETTINGS_SYNC.Blocked.core_systemMigrationVersion": "Copying this would make the system skip or repeat migrations.",
+  "SETTINGS_SYNC.Blocked.core_rtcWorldSettings": "Holds audio/video server credentials.",
+  "SETTINGS_SYNC.Blocked.migration": "Migration bookkeeping — copying it would make the package skip or repeat migrations.",
+  "SETTINGS_SYNC.Blocked.systemMismatch": "The two worlds run different systems.",
+
+  "SETTINGS_SYNC.Notify.Published": "Published a settings snapshot of \"{world}\".",
+  "SETTINGS_SYNC.Notify.Imported": "Imported a snapshot of \"{world}\".",
+  "SETTINGS_SYNC.Notify.Applied": "Applied {applied} change(s).",
+  "SETTINGS_SYNC.Notify.AppliedWithErrors": "Applied {applied} change(s); {failed} failed.",
+
+  "SETTINGS_SYNC.Confirm.Title": "Apply Settings",
+  "SETTINGS_SYNC.Confirm.Body": "Apply {count} change(s) from \"{world}\" to this world? This overwrites the current values and cannot be undone.",
+
+  "SETTINGS_SYNC.Error.BadSnapshot": "That file is not a Settings Sync snapshot this version can read.",
+  "SETTINGS_SYNC.Error.PublishFailed": "Could not write {file} to the snapshot store. See the console for the server's reason."
+}

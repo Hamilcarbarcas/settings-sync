@@ -1,0 +1,3 @@
+# Foundry writes published snapshots into the module's persistent storage folder. The live
+# module directory is a symlink into this repo, so they land here.
+storage/

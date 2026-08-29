@@ -1,0 +1,179 @@
+<div class="ss-toolbar">
+  <label class="ss-target">
+    <span>{{localize "SETTINGS_SYNC.CompareWith"}}</span>
+    <select data-control="target" {{#unless hasTargets}}disabled{{/unless}}>
+      {{#if hasTargets}}
+        {{#each targets}}
+          <option value="{{id}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+        {{/each}}
+      {{else}}
+        <option>{{localize "SETTINGS_SYNC.NoTargets"}}</option>
+      {{/if}}
+    </select>
+  </label>
+
+  <div class="ss-toolbar-buttons">
+    <button type="button" data-action="refresh" data-tooltip="SETTINGS_SYNC.Tooltip.Refresh">
+      <i class="fa-solid fa-rotate"></i>
+    </button>
+    <button type="button" data-action="publish" data-tooltip="SETTINGS_SYNC.Tooltip.Publish">
+      <i class="fa-solid fa-camera"></i>
+    </button>
+    <button type="button" data-action="importSnapshot" data-tooltip="SETTINGS_SYNC.Tooltip.Import">
+      <i class="fa-solid fa-file-import"></i>
+    </button>
+    <button type="button" data-action="exportSnapshot" data-tooltip="SETTINGS_SYNC.Tooltip.Export">
+      <i class="fa-solid fa-file-export"></i>
+    </button>
+    <input type="file" accept="application/json,.json" data-control="file" hidden>
+  </div>
+</div>
+
+{{#if diff}}
+  <div class="ss-target-meta">
+    <span class="ss-world">{{diff.worldTitle}}</span>
+    <span class="ss-dot">·</span>
+    <span>{{diff.system}} {{diff.systemVersion}}</span>
+    <span class="ss-dot">·</span>
+    <span>{{localize "SETTINGS_SYNC.Foundry"}} {{diff.coreVersion}}</span>
+    <span class="ss-dot">·</span>
+    <span data-tooltip="{{diff.capturedAbsolute}}">
+      {{localize "SETTINGS_SYNC.Captured"}} {{diff.capturedRelative}}
+    </span>
+    {{#if diff.imported}}
+      <span class="ss-tag">{{localize "SETTINGS_SYNC.Imported"}}</span>
+    {{/if}}
+  </div>
+
+  {{#each diff.warnings}}
+    <p class="ss-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{this}}</p>
+  {{/each}}
+{{/if}}
+
+{{#if status}}
+  <p class="ss-status">{{status}}</p>
+{{/if}}
+
+<div class="ss-filters">
+  <input type="search" data-control="search" value="{{filters.search}}"
+         placeholder="{{localize 'SETTINGS_SYNC.SearchPlaceholder'}}">
+  <label><input type="checkbox" data-filter="identical" {{checked filters.identical}}>
+    <span>{{localize "SETTINGS_SYNC.Filter.Identical"}}</span></label>
+  <label><input type="checkbox" data-filter="blocked" {{checked filters.blocked}}>
+    <span>{{localize "SETTINGS_SYNC.Filter.Blocked"}}</span></label>
+  <label><input type="checkbox" data-filter="noise" {{checked filters.noise}}>
+    <span>{{localize "SETTINGS_SYNC.Filter.Noise"}}</span></label>
+</div>
+
+<div class="ss-scroll">
+  {{#unless diff}}
+    <p class="ss-empty">
+      {{#if loading}}
+        {{localize "SETTINGS_SYNC.Loading"}}
+      {{else}}
+        {{localize "SETTINGS_SYNC.NoTargetsHint"}}
+      {{/if}}
+    </p>
+  {{/unless}}
+
+  {{#each categories}}
+    <section class="ss-category {{#if collapsed}}collapsed{{/if}}" data-category-key="{{key}}">
+      <header class="ss-category-head">
+        <button type="button" class="ss-caret" data-action="toggleCategory">
+          <i class="fa-solid {{#if collapsed}}fa-caret-right{{else}}fa-caret-down{{/if}}"></i>
+        </button>
+        <h3 data-action="toggleCategory">{{label}}</h3>
+        <span class="ss-count">{{#if differences}}{{differences}}{{else}}—{{/if}}</span>
+        {{#if selectable}}
+          <button type="button" class="ss-select-all" data-action="selectCategory">
+            {{localize "SETTINGS_SYNC.SelectAllHere"}}
+          </button>
+        {{/if}}
+      </header>
+
+      {{#if note}}<p class="ss-note">{{note}}</p>{{/if}}
+      {{#if warning}}
+        <p class="ss-warning"><i class="fa-solid fa-triangle-exclamation"></i> {{warning}}</p>
+      {{/if}}
+
+      {{#unless collapsed}}
+        {{#if empty}}
+          <p class="ss-note">
+            {{#if hidden}}
+              {{localize "SETTINGS_SYNC.FilteredOut"}}
+            {{else}}
+              {{localize "SETTINGS_SYNC.NoDifferences"}}
+            {{/if}}
+          </p>
+        {{/if}}
+
+        <ul class="ss-rows">
+          {{#each rows}}
+            <li class="ss-row ss-{{state}} {{#if blocked}}ss-blocked{{/if}}" data-row-id="{{id}}">
+              <div class="ss-row-head">
+                {{#if blocked}}
+                  <i class="fa-solid fa-lock ss-lock" data-tooltip="{{blockedText}}"></i>
+                {{else if appliable}}
+                  <input type="checkbox" class="ss-check" data-row-id="{{id}}" {{checked selected}}>
+                {{else}}
+                  <i class="fa-solid fa-equals ss-equal"></i>
+                {{/if}}
+
+                <div class="ss-labels">
+                  <span class="ss-label">{{label}}</span>
+                  <span class="ss-key">{{key}}</span>
+                </div>
+
+                <div class="ss-values">
+                  <span class="ss-here">{{hereText}}</span>
+                  <i class="fa-solid fa-arrow-right ss-arrow"></i>
+                  <span class="ss-there">{{thereText}}</span>
+                  {{#if unsets}}<span class="ss-tag">{{localize "SETTINGS_SYNC.Unset"}}</span>{{/if}}
+                </div>
+
+                {{#if detail}}
+                  <button type="button" class="ss-expand" data-action="toggleDetail"
+                          data-tooltip="SETTINGS_SYNC.Tooltip.Detail">
+                    <i class="fa-solid {{#if expanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}}"></i>
+                  </button>
+                {{/if}}
+              </div>
+
+              {{#each noteTexts}}<p class="ss-row-note">{{this}}</p>{{/each}}
+              {{#if blockedText}}<p class="ss-row-note ss-row-blocked">{{blockedText}}</p>{{/if}}
+
+              {{#if expanded}}
+                <table class="ss-detail">
+                  <tbody>
+                    {{#each detail}}
+                      <tr>
+                        <th>{{path}}</th>
+                        <td class="ss-here">{{here}}</td>
+                        <td class="ss-there">{{there}}</td>
+                      </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      {{/unless}}
+    </section>
+  {{/each}}
+</div>
+
+<footer class="ss-footer">
+  <span class="ss-summary">
+    {{localize "SETTINGS_SYNC.Selected"}}
+    <strong data-control="selected-count">{{selectedCount}}</strong>
+    {{localize "SETTINGS_SYNC.Of"}} {{differenceCount}}
+  </span>
+  <div class="ss-footer-buttons">
+    <button type="button" data-action="clearSelection">{{localize "SETTINGS_SYNC.Clear"}}</button>
+    <button type="button" data-action="selectAll">{{localize "SETTINGS_SYNC.SelectAllDifferences"}}</button>
+    <button type="button" class="ss-primary" data-action="apply" {{#unless selectedCount}}disabled{{/unless}}>
+      <i class="fa-solid fa-download"></i> {{localize "SETTINGS_SYNC.ApplySelected"}}
+    </button>
+  </div>
+</footer>

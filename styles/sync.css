@@ -1,0 +1,368 @@
+/*
+ * Every selector is scoped under .settings-sync. Module CSS is unlayered and therefore
+ * outranks all of core's @layer rules, so a bare element or utility selector here would
+ * repaint the whole application.
+ */
+
+.settings-sync .window-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  overflow: hidden;
+}
+
+/* --- Toolbar ------------------------------------------------------------ */
+
+.settings-sync .ss-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings-sync .ss-target {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-sync .ss-target > span {
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
+.settings-sync .ss-target select {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-sync .ss-toolbar-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.settings-sync .ss-toolbar-buttons button {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.settings-sync .ss-target-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-size: var(--font-size-12, 0.75rem);
+  opacity: 0.85;
+}
+
+.settings-sync .ss-target-meta .ss-world {
+  font-weight: bold;
+  opacity: 1;
+}
+
+.settings-sync .ss-dot {
+  opacity: 0.4;
+}
+
+.settings-sync .ss-tag {
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 0 0.3em;
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+
+.settings-sync .ss-warning,
+.settings-sync .ss-status {
+  margin: 0;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.settings-sync .ss-warning {
+  background: rgb(200 130 20 / 18%);
+  border-left: 3px solid rgb(200 130 20 / 70%);
+}
+
+.settings-sync .ss-status {
+  background: rgb(60 140 90 / 18%);
+  border-left: 3px solid rgb(60 140 90 / 70%);
+}
+
+/* --- Filters ------------------------------------------------------------ */
+
+.settings-sync .ss-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.settings-sync .ss-filters input[type="search"] {
+  flex: 1;
+  min-width: 8rem;
+}
+
+.settings-sync .ss-filters label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.settings-sync .ss-filters input[type="checkbox"] {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+/* --- Category list ------------------------------------------------------ */
+
+.settings-sync .ss-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.25rem;
+}
+
+.settings-sync .ss-empty,
+.settings-sync .ss-note {
+  margin: 0.25rem 0 0.5rem;
+  font-size: var(--font-size-12, 0.75rem);
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.settings-sync .ss-category {
+  margin-bottom: 0.5rem;
+}
+
+.settings-sync .ss-category-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-bottom: 1px solid var(--color-border-light-tertiary, rgb(128 128 128 / 40%));
+  padding-bottom: 0.15rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--color-bg, var(--dialog-background, inherit));
+}
+
+.settings-sync .ss-category-head h3 {
+  flex: 1;
+  margin: 0;
+  border: none;
+  font-size: var(--font-size-14, 0.875rem);
+  cursor: pointer;
+}
+
+.settings-sync .ss-category-head .ss-caret {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: 1;
+}
+
+.settings-sync .ss-category-head .ss-count {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.settings-sync .ss-category-head .ss-select-all {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0 0.4rem;
+  height: 1.4rem;
+  line-height: 1;
+  font-size: var(--font-size-11, 0.7rem);
+}
+
+/* --- Rows --------------------------------------------------------------- */
+
+.settings-sync .ss-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.settings-sync .ss-row {
+  padding: 0.2rem 0;
+  border-bottom: 1px dotted rgb(128 128 128 / 25%);
+}
+
+.settings-sync .ss-row-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings-sync .ss-row input.ss-check {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.settings-sync .ss-row .ss-lock,
+.settings-sync .ss-row .ss-equal {
+  flex: 0 0 1rem;
+  text-align: center;
+  opacity: 0.4;
+  font-size: 0.8em;
+}
+
+.settings-sync .ss-labels {
+  flex: 1 1 45%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.settings-sync .ss-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-sync .ss-key {
+  font-family: var(--font-mono, monospace);
+  font-size: var(--font-size-11, 0.7rem);
+  opacity: 0.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-sync .ss-values {
+  flex: 1 1 45%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--font-size-11, 0.7rem);
+}
+
+.settings-sync .ss-values .ss-here,
+.settings-sync .ss-values .ss-there {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 45%;
+}
+
+.settings-sync .ss-values .ss-here {
+  opacity: 0.6;
+}
+
+.settings-sync .ss-values .ss-there {
+  font-weight: bold;
+}
+
+.settings-sync .ss-arrow {
+  flex: 0 0 auto;
+  opacity: 0.4;
+  font-size: 0.8em;
+}
+
+.settings-sync .ss-expand {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: 1;
+}
+
+.settings-sync .ss-row.ss-blocked .ss-labels,
+.settings-sync .ss-row.ss-blocked .ss-values {
+  opacity: 0.55;
+}
+
+.settings-sync .ss-row.ss-same {
+  opacity: 0.6;
+}
+
+.settings-sync .ss-row-note {
+  margin: 0 0 0 1.5rem;
+  font-size: var(--font-size-11, 0.7rem);
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.settings-sync .ss-row-note.ss-row-blocked {
+  color: rgb(190 120 20);
+  font-style: normal;
+}
+
+/* --- Object leaf diff --------------------------------------------------- */
+
+.settings-sync .ss-detail {
+  width: calc(100% - 1.5rem);
+  margin: 0.25rem 0 0.35rem 1.5rem;
+  border-collapse: collapse;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--font-size-11, 0.7rem);
+  table-layout: fixed;
+}
+
+.settings-sync .ss-detail th,
+.settings-sync .ss-detail td {
+  padding: 0.1rem 0.35rem;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+  border: none;
+}
+
+.settings-sync .ss-detail th {
+  width: 45%;
+  font-weight: normal;
+  opacity: 0.75;
+}
+
+.settings-sync .ss-detail td.ss-here {
+  opacity: 0.6;
+}
+
+.settings-sync .ss-detail td.ss-there {
+  font-weight: bold;
+}
+
+/* --- Footer ------------------------------------------------------------- */
+
+.settings-sync .ss-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-top: 1px solid var(--color-border-light-tertiary, rgb(128 128 128 / 40%));
+  padding-top: 0.5rem;
+}
+
+.settings-sync .ss-summary {
+  flex: 1;
+  font-size: var(--font-size-12, 0.75rem);
+  opacity: 0.85;
+}
+
+.settings-sync .ss-footer-buttons {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.settings-sync .ss-footer-buttons button {
+  width: auto;
+  padding: 0 0.6rem;
+  white-space: nowrap;
+}
