@@ -4,3 +4,6 @@ storage/
 
 # The design record is kept locally, not published with the module.
 DESIGN*.md
+
+# The doc-edit log is kept locally, not published with the module.
+README-EDITS.md
