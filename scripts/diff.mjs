@@ -6,7 +6,8 @@
  */
 
 import {
-  ABSENT, BLOCKED_KEYS, BLOCKED_PATTERNS, CATEGORY, NOISE_PATTERNS, ROW_STATE
+  ABSENT, BLOCKED_KEYS, BLOCKED_PATTERNS, CATEGORY, CAUTION_KEYS, NOISE_PATTERNS, ROW_STATE,
+  WORLD_STATE_KEYS
 } from "./constants.mjs";
 
 /* -------------------------------------------- */
@@ -106,10 +107,63 @@ export function display(value) {
 function blockedReasonFor(key) {
   if ( BLOCKED_KEYS.includes(key) ) return `SETTINGS_SYNC.Blocked.${key.replace(/\./g, "_")}`;
   if ( BLOCKED_PATTERNS.some(p => p.test(key)) ) return "SETTINGS_SYNC.Blocked.migration";
+  if ( WORLD_STATE_KEYS.includes(key) ) return "SETTINGS_SYNC.Blocked.worldState";
   return null;
 }
 
 const isNoise = key => NOISE_PATTERNS.some(p => p.test(key));
+
+const ID_PATTERN = /^[A-Za-z0-9]{16}$/;
+const UUID_ID_PATTERN = /\.([A-Za-z0-9]{16})(?=\.|$)/g;
+
+/**
+ * Ids of every top-level document in the running world.
+ * @returns {Set<string>}
+ */
+export function worldDocumentIds() {
+  const ids = new Set();
+  for ( const collection of game.collections ) {
+    for ( const id of collection.keys() ) ids.add(id);
+  }
+  return ids;
+}
+
+/**
+ * Whether a value holds the id or UUID of a document in `ids`, as a string or an object key.
+ * @param {*} value
+ * @param {Set<string>} ids
+ * @returns {boolean}
+ */
+function referencesDocuments(value, ids) {
+  if ( typeof value === "string" ) {
+    if ( ID_PATTERN.test(value) ) return ids.has(value);
+    if ( !value.includes(".") ) return false;
+    for ( const [, id] of value.matchAll(UUID_ID_PATTERN) ) if ( ids.has(id) ) return true;
+    return false;
+  }
+  if ( Array.isArray(value) ) return value.some(v => referencesDocuments(v, ids));
+  if ( value && (typeof value === "object") ) {
+    return Object.entries(value).some(([k, v]) =>
+      (ID_PATTERN.test(k) && ids.has(k)) || referencesDocuments(v, ids));
+  }
+  return false;
+}
+
+/**
+ * Why applying this row needs a deliberate tick, or null. §5.2.
+ * @returns {string|null}  An i18n key.
+ */
+function cautionReasonFor(key, here, there, documentIds) {
+  const curated = CAUTION_KEYS[key];
+  if ( curated ) return `SETTINGS_SYNC.Caution.${curated}`;
+  if ( !documentIds?.size ) return null;
+  for ( const side of [here, there] ) {
+    if ( (side !== ABSENT) && referencesDocuments(side.value, documentIds) ) {
+      return "SETTINGS_SYNC.Caution.documentIds";
+    }
+  }
+  return null;
+}
 
 function stateOf(here, there) {
   const hereAbsent = here === ABSENT;
@@ -124,13 +178,16 @@ function stateOf(here, there) {
 /*  Rows                                        */
 /* -------------------------------------------- */
 
-function buildSettingRow({ local, remote, bucket, scope, key, category, group }) {
+function buildSettingRow({ local, remote, bucket, scope, key, category, group, documentIds }) {
   const here = effective(local, bucket, key);
   const there = effective(remote, bucket, key);
   const state = stateOf(here, there);
 
   const reg = local.registry?.[key] ?? remote.registry?.[key] ?? null;
   const blockedReason = blockedReasonFor(key);
+  const cautionReason = ((state === ROW_STATE.same) || blockedReason)
+    ? null
+    : cautionReasonFor(key, here, there, documentIds);
 
   // If the target simply never touched this setting, and our registered default agrees
   // with the one it fell back to, then "matching the target" means deleting our document
@@ -162,6 +219,9 @@ function buildSettingRow({ local, remote, bucket, scope, key, category, group })
     detail: leafDiff(here === ABSENT ? null : here, there === ABSENT ? null : there),
     blocked: !!blockedReason,
     blockedReason,
+    /** Appliable, but skipped by the select-all buttons. */
+    caution: !!cautionReason,
+    cautionReason,
     noise: isNoise(key),
     appliable: (state !== ROW_STATE.same) && !blockedReason
   };
@@ -239,9 +299,11 @@ function buildModuleRows(local, remote) {
  * Compare two snapshots.
  * @param {object} local   A snapshot of the running world.
  * @param {object} remote  The target snapshot.
+ * @param {object} [options]
+ * @param {Set<string>} [options.documentIds]  Ids that mark a setting as referencing documents.
  * @returns {object}
  */
-export function buildDiff(local, remote) {
+export function buildDiff(local, remote, { documentIds = worldDocumentIds() } = {}) {
   const systemMismatch = local.world.system !== remote.world.system;
   const seen = new Set();
   const groups = new Map();   // category|group -> category object
@@ -282,12 +344,14 @@ export function buildDiff(local, remote) {
 
     const row = buildSettingRow({
       local, remote, bucket: "settings", scope: "world", key,
-      category: cat.id, group: cat.key
+      category: cat.id, group: cat.key, documentIds
     });
     if ( cat.blocked ) {
       row.blocked = true;
       row.appliable = false;
       row.blockedReason ??= "SETTINGS_SYNC.Blocked.systemMismatch";
+      row.caution = false;
+      row.cautionReason = null;
     }
     cat.rows.push(row);
   }
@@ -297,7 +361,8 @@ export function buildDiff(local, remote) {
     category(CATEGORY.user, null, game.i18n.localize("SETTINGS_SYNC.Category.User"),
       { note: game.i18n.localize("SETTINGS_SYNC.Note.UserScope") })
       .rows.push(buildSettingRow({
-        local, remote, bucket: "userSettings", scope: "user", key, category: CATEGORY.user, group: null
+        local, remote, bucket: "userSettings", scope: "user", key, category: CATEGORY.user, group: null,
+        documentIds
       }));
   }
 
@@ -306,7 +371,8 @@ export function buildDiff(local, remote) {
     category(CATEGORY.client, null, game.i18n.localize("SETTINGS_SYNC.Category.Client"),
       { warning: game.i18n.localize("SETTINGS_SYNC.Note.ClientScope") })
       .rows.push(buildSettingRow({
-        local, remote, bucket: "clientSettings", scope: "client", key, category: CATEGORY.client, group: null
+        local, remote, bucket: "clientSettings", scope: "client", key, category: CATEGORY.client, group: null,
+        documentIds
       }));
   }
 

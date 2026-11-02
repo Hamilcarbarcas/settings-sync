@@ -73,12 +73,27 @@ They're shown, with both values, and cannot be applied:
 - `core.rtcWorldSettings` — audio/video server credentials
 - `core.moduleConfiguration` — that's the Modules group; change it there
 
-The lists are three commented arrays at the top of `scripts/constants.mjs`, so adding a key
-is a one-line edit.
+Campaign data that a module happens to keep in a setting is locked the same way: a currency
+ledger, an in-progress rest, a tension pool's current count, saved encounters tied to scenes.
+Copying any of these would overwrite this world's history with the other world's.
 
-This is a curated list, not an analysis: a setting belonging to some module that happens to
-store document IDs cannot be detected automatically, and will be offered as appliable. If
-you spot one, add it.
+### Flagged settings
+
+Applying a setting replaces its whole value; nothing is merged. For a setting that holds a
+list of actors, users or scenes, that means entries only this world has are lost. These rows
+can still be applied, since worlds cloned from one another share document ids, but they carry
+a warning icon and are **skipped by both select-all buttons**, so each one has to be ticked by
+hand. The confirmation lists any you ticked.
+
+A row is flagged when:
+
+- either world's value references a document in this world, by id or UUID (detected
+  automatically); or
+- it's on the curated list, which covers id lists whose ids exist only in the other world,
+  and Simple Calendar's calendar configuration, which carries the current date inside it.
+
+All of these lists live as commented constants at the top of `scripts/constants.mjs`, so
+adding a key is a one-line edit.
 
 ### Client settings will look empty, and that's correct
 

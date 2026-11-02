@@ -1,6 +1,6 @@
 /**
  * Shared identifiers and the curated key lists.
- * See DESIGN.md §5 — the three arrays below are meant to be edited by hand when a key
+ * See DESIGN.md §5 — the lists below are meant to be edited by hand when a key
  * turns up in the field that belongs on one of them.
  */
 
@@ -36,6 +36,46 @@ export const BLOCKED_KEYS = [
 export const BLOCKED_PATTERNS = [
   /(migration|schema)version$/i    // any package's own migration bookkeeping
 ];
+
+/**
+ * Campaign data kept in a setting. Locked like BLOCKED_KEYS. §5.1.
+ * @type {string[]}
+ */
+export const WORLD_STATE_KEYS = [
+  "astora-mod.activeRest",
+  "astora-mod.activeRestId",
+  "astora-mod.activeSofMessageId",
+  "astora-mod.currency-ledger-data",
+  "astora-mod.lastRest",
+  "astora-mod.roll-checks-characters",
+  "astora-mod.roll-checks-data",
+  "astora-mod.roll-checks-snapshot",
+  "astora-mod.tension-pool-data",
+  "astora-mod.tension-scale",
+  "find-the-culprit.data",
+  "moulinette.session_ID",
+  "moulinette-navigation-tools.currentFolder",
+  "pf1-token-randomizer.encounters"
+];
+
+/**
+ * Appliable, but flagged and skipped by the select-all buttons. Value is the reason id,
+ * `SETTINGS_SYNC.Caution.<reason>`. Settings that reference documents in this world are also
+ * flagged automatically. §5.2.
+ * @type {Record<string, string>}
+ */
+export const CAUTION_KEYS = {
+  "astora-mod.currency-ledger-whitelist": "documentIds",
+  "astora-mod.rest-exclude": "documentIds",
+  "astora-mod.rest-restricted": "documentIds",
+  "astora-mod.tokenBarPresenceIgnoredUsers": "documentIds",
+  "item-piles.defaultItemPileActorID": "documentIds",
+  "LockView.userSettings": "documentIds",
+  "monks-common-display.playerdata": "documentIds",
+  "pf1-roll-requests.npc-blacklist": "documentIds",
+  "foundryvtt-simple-calendar.calendar-configuration": "currentDate",
+  "foundryvtt-simple-calendar-reborn.calendar-configuration": "currentDate"
+};
 
 /**
  * Appliable, but hidden until "Show noise" is ticked. Churn nobody wants to read past.

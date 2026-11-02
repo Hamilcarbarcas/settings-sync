@@ -43,6 +43,7 @@
   "SETTINGS_SYNC.Tooltip.Import": "Import a snapshot file from another install",
   "SETTINGS_SYNC.Tooltip.Export": "Download this world's snapshot as a file",
   "SETTINGS_SYNC.Tooltip.Detail": "Show which keys differ",
+  "SETTINGS_SYNC.Tooltip.SelectAll": "Skips rows flagged with a warning; tick those by hand",
 
   "SETTINGS_SYNC.Category.Modules": "Modules",
   "SETTINGS_SYNC.Category.Core": "Core",
@@ -72,6 +73,10 @@
   "SETTINGS_SYNC.Blocked.core_rtcWorldSettings": "Holds audio/video server credentials.",
   "SETTINGS_SYNC.Blocked.migration": "Migration bookkeeping — copying it would make the package skip or repeat migrations.",
   "SETTINGS_SYNC.Blocked.systemMismatch": "The two worlds run different systems.",
+  "SETTINGS_SYNC.Blocked.worldState": "Campaign data for this world, not a preference.",
+
+  "SETTINGS_SYNC.Caution.documentIds": "References documents by id. Applying replaces the whole value, dropping entries only this world has.",
+  "SETTINGS_SYNC.Caution.currentDate": "Includes the calendar's current date. Applying moves this world's date too.",
 
   "SETTINGS_SYNC.Notify.Published": "Published a settings snapshot of \"{world}\".",
   "SETTINGS_SYNC.Notify.Imported": "Imported a snapshot of \"{world}\".",
@@ -80,6 +85,7 @@
 
   "SETTINGS_SYNC.Confirm.Title": "Apply Settings",
   "SETTINGS_SYNC.Confirm.Body": "Apply {count} change(s) from \"{world}\" to this world? This overwrites the current values and cannot be undone.",
+  "SETTINGS_SYNC.Confirm.Caution": "Flagged with a warning:",
 
   "SETTINGS_SYNC.Error.BadSnapshot": "That file is not a Settings Sync snapshot this version can read.",
   "SETTINGS_SYNC.Error.PublishFailed": "Could not write {file} to the snapshot store. See the console for the server's reason."

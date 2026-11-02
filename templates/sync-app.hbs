@@ -115,6 +115,9 @@
                   <i class="fa-solid fa-lock ss-lock" data-tooltip="{{blockedText}}"></i>
                 {{else if appliable}}
                   <input type="checkbox" class="ss-check" data-row-id="{{id}}" {{checked selected}}>
+                  {{#if caution}}
+                    <i class="fa-solid fa-triangle-exclamation ss-caution" data-tooltip="{{cautionText}}"></i>
+                  {{/if}}
                 {{else}}
                   <i class="fa-solid fa-equals ss-equal"></i>
                 {{/if}}
@@ -141,6 +144,7 @@
 
               {{#each noteTexts}}<p class="ss-row-note">{{this}}</p>{{/each}}
               {{#if blockedText}}<p class="ss-row-note ss-row-blocked">{{blockedText}}</p>{{/if}}
+              {{#if cautionText}}<p class="ss-row-note ss-row-caution">{{cautionText}}</p>{{/if}}
 
               {{#if expanded}}
                 <table class="ss-detail">
@@ -171,7 +175,9 @@
   </span>
   <div class="ss-footer-buttons">
     <button type="button" data-action="clearSelection">{{localize "SETTINGS_SYNC.Clear"}}</button>
-    <button type="button" data-action="selectAll">{{localize "SETTINGS_SYNC.SelectAllDifferences"}}</button>
+    <button type="button" data-action="selectAll" data-tooltip="SETTINGS_SYNC.Tooltip.SelectAll">
+      {{localize "SETTINGS_SYNC.SelectAllDifferences"}}
+    </button>
     <button type="button" class="ss-primary" data-action="apply" {{#unless selectedCount}}disabled{{/unless}}>
       <i class="fa-solid fa-download"></i> {{localize "SETTINGS_SYNC.ApplySelected"}}
     </button>

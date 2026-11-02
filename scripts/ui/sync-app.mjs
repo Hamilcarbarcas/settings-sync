@@ -168,6 +168,7 @@ export default class SettingsSyncApp extends HandlebarsApplicationMixin(Applicat
         selected: this.#selected.has(row.id),
         expanded: this.#expanded.has(row.id),
         blockedText: row.blockedReason ? game.i18n.localize(row.blockedReason) : null,
+        cautionText: row.cautionReason ? game.i18n.localize(row.cautionReason) : null,
         noteTexts: (row.notes ?? []).map(n => game.i18n.localize(n)),
         stateLabel: game.i18n.localize(`SETTINGS_SYNC.State.${row.state}`)
       }));
@@ -179,7 +180,7 @@ export default class SettingsSyncApp extends HandlebarsApplicationMixin(Applicat
         warning: cat.warning,
         differences: cat.differences,
         collapsed: this.#collapsed.has(key),
-        selectable: rows.some(r => r.appliable),
+        selectable: rows.some(r => r.appliable && !r.caution),
         rows,
         empty: rows.length === 0,
         hidden: (rows.length === 0) && (cat.differences > 0)
@@ -334,7 +335,7 @@ export default class SettingsSyncApp extends HandlebarsApplicationMixin(Applicat
     const key = target.closest("[data-category-key]").dataset.categoryKey;
     const category = this.#diff?.categories.find(c => `${c.id}|${c.key ?? ""}` === key);
     if ( !category ) return;
-    const rows = this.#visibleRows(category.rows).filter(r => r.appliable);
+    const rows = this.#visibleRows(category.rows).filter(r => r.appliable && !r.caution);
     const allSelected = rows.every(r => this.#selected.has(r.id));
     for ( const row of rows ) {
       if ( allSelected ) this.#selected.delete(row.id);
@@ -344,7 +345,7 @@ export default class SettingsSyncApp extends HandlebarsApplicationMixin(Applicat
   }
 
   static #onSelectAll() {
-    for ( const row of this.#diff?.rows ?? [] ) if ( row.appliable ) this.#selected.add(row.id);
+    for ( const row of this.#diff?.rows ?? [] ) if ( row.appliable && !row.caution ) this.#selected.add(row.id);
     this.render();
   }
 
@@ -357,12 +358,19 @@ export default class SettingsSyncApp extends HandlebarsApplicationMixin(Applicat
     const rows = (this.#diff?.rows ?? []).filter(r => this.#selected.has(r.id) && r.appliable);
     if ( !rows.length ) return;
 
+    let content = `<p>${game.i18n.format("SETTINGS_SYNC.Confirm.Body", {
+      count: rows.length,
+      world: this.#diff.remote.world.title
+    })}</p>`;
+    const flagged = rows.filter(r => r.caution);
+    if ( flagged.length ) {
+      const items = flagged.map(r => `<li>${foundry.utils.escapeHTML(r.label)}</li>`).join("");
+      content += `<p>${game.i18n.localize("SETTINGS_SYNC.Confirm.Caution")}</p><ul>${items}</ul>`;
+    }
+
     const confirmed = await foundry.applications.api.DialogV2.confirm({
       window: { title: game.i18n.localize("SETTINGS_SYNC.Confirm.Title") },
-      content: `<p>${game.i18n.format("SETTINGS_SYNC.Confirm.Body", {
-        count: rows.length,
-        world: this.#diff.remote.world.title
-      })}</p>`,
+      content,
       yes: { label: game.i18n.localize("SETTINGS_SYNC.Apply") },
       modal: true
     });

@@ -301,9 +301,17 @@
   font-style: italic;
 }
 
-.settings-sync .ss-row-note.ss-row-blocked {
+.settings-sync .ss-row-note.ss-row-blocked,
+.settings-sync .ss-row-note.ss-row-caution {
   color: rgb(190 120 20);
   font-style: normal;
+}
+
+.settings-sync .ss-row .ss-caution {
+  flex: 0 0 auto;
+  margin-left: -0.25rem;
+  color: rgb(190 120 20);
+  font-size: 0.8em;
 }
 
 /* --- Object leaf diff --------------------------------------------------- */
